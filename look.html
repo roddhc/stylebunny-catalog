@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A StyleBunny Lookbook 🐇</title>
+<meta name="description" content="Someone shared a StyleBunny lookbook with you. Open it in the app and make it yours.">
+<meta property="og:title" content="A StyleBunny lookbook was shared with you 🐇">
+<meta property="og:description" content="Open it in StyleBunny, remix it, and make it yours.">
+<meta property="og:type" content="website">
+<style>
+  :root { --pink:#F4B6C2; --deep:#8B3A5A; --ink:#2B2B2B; --soft:#FFF7F9; --muted:#6B6B6B; }
+  @media (prefers-color-scheme: dark) { :root { --ink:#F2F2F2; --soft:#1B1517; --muted:#B9B9B9; } }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+         background: var(--soft); color: var(--ink); min-height:100vh;
+         display:flex; align-items:center; justify-content:center; padding:24px 16px; }
+  .card { max-width:420px; width:100%; text-align:center; }
+  .bunny { font-size:64px; line-height:1; }
+  h1 { font-size:24px; margin:16px 0 8px; }
+  p { color: var(--muted); line-height:1.5; margin:0 0 24px; }
+  a.btn { display:block; padding:16px; border-radius:16px; font-weight:800; font-size:16px;
+          text-decoration:none; margin-bottom:12px; }
+  .primary { background: var(--deep); color:#fff; }
+  .secondary { background: var(--pink); color:#2B2B2B; }
+  .note { font-size:13px; margin-top:20px; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+  <main class="card">
+    <div class="bunny">🐇</div>
+    <h1>A lookbook was shared with you</h1>
+    <p id="intro">Open it in StyleBunny to see the full board, remix it, and save your own copy.</p>
+
+    <a id="open" class="btn primary hidden" href="#">Open in StyleBunny</a>
+    <a id="get" class="btn secondary"
+       href="https://play.google.com/store/apps/details?id=com.stylebunny.shop_fashion_and_lifestyle">Get StyleBunny on Google Play</a>
+
+    <p id="after" class="note hidden">Just installed it? Come back to this page and tap <b>Open in StyleBunny</b>.</p>
+    <p id="notAndroid" class="note hidden">StyleBunny is currently available for Android.</p>
+    <p id="noData" class="note hidden">This link looks incomplete. Ask your friend to share it again.</p>
+  </main>
+
+<script>
+  (function () {
+    var PACKAGE = 'com.stylebunny.shop_fashion_and_lifestyle';
+    var PLAY = 'https://play.google.com/store/apps/details?id=' + PACKAGE;
+    var params = new URLSearchParams(window.location.search);
+    var data = params.get('data');
+    var isAndroid = /android/i.test(navigator.userAgent);
+
+    if (!data) {
+      document.getElementById('noData').classList.remove('hidden');
+      return;
+    }
+    // Lookbook data is URL-safe Base64 (letters, numbers, - and _ only).
+    if (!/^[A-Za-z0-9_\-=]+$/.test(data)) {
+      document.getElementById('noData').classList.remove('hidden');
+      return;
+    }
+
+    if (isAndroid) {
+      // Opens the app if installed; otherwise Android goes to the Play Store.
+      var intentUrl = 'intent://look?data=' + data +
+        '#Intent;scheme=stylebunny;package=' + PACKAGE +
+        ';S.browser_fallback_url=' + encodeURIComponent(PLAY) + ';end';
+      var open = document.getElementById('open');
+      open.href = intentUrl;
+      open.classList.remove('hidden');
+      document.getElementById('after').classList.remove('hidden');
+    } else {
+      document.getElementById('notAndroid').classList.remove('hidden');
+    }
+  })();
+</script>
+</body>
+</html>
